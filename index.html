@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Signika+Negative&display=swap" rel="stylesheet">
+    <title>Random Quotes</title>
+    <style>
+        @font-face {
+            font-family: myfontquotes;
+            src: url(MondayFeelings.ttf);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: myfontquotes;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -1;
+            background-color: rgb(93, 96, 99);
+        }
+
+        .wrapper {
+            width: 60%;
+            height: 35rem;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-color: #3b89f0f2;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 0px 30px;
+            width: 60%;
+            height: 22rem;
+            border-radius: 10px 10px 0px 0px;
+            text-align: center;
+            background-color: rgb(252, 252, 252);
+            box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+        }
+        #heading{
+            padding: 20px; color: rgb(66, 63, 63); 
+            font-size: 28px;
+        }
+
+        .imgTwitter{
+            width: 50px; 
+            transition: all ease-in;
+            animation: mymove 2s linear ;
+        }
+        @keyframes mymove{
+            from{
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg); 
+            }
+            
+        }
+
+        .imgTwitter:hover{
+            transition: all ease-in;
+            animation: hovmovebird 2s linear ;
+        }
+        @keyframes hovmovebird{
+            from{
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg); 
+            }
+            
+        }
+
+        .btn {
+            width: 60%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            background-color: #f8f8f9;
+            box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+        }
+        button{
+            width: 50%;
+            height: 50px;
+            outline: none;
+            border: none;
+            font-size: 17px;
+            border-radius: 0 0 10px 10px;
+            color: #f8f8f9;
+            background-color: #4f4ff5;
+            transition: all ease-in;
+        }
+        button:hover{
+            transform: rotate(360%);
+            background-color: #4646d3;
+        }
+        .quotes {
+            font-size: 18px;
+            color: rgba(59, 137, 240, 0.95);
+            font-weight: 600;
+        }
+        #author{
+            padding-top:30px;
+                text-align: right; color: rgb(73, 73, 73);
+        }
+
+        
+        @media (max-width: 878px){
+            .container,.btn{
+            width: 70%;
+        }
+        .wrapper{
+            width: 80%;
+        }
+        }
+
+        @media (max-width: 540px) {
+            body{
+            background-color: rgba(59, 137, 240, 0.95);
+            }
+            .container,.btn{
+            width: 90%;
+        }
+        .wrapper{
+            width: 100%;
+        }
+        #heading{
+            font-size: 28px;
+        }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <div class="box">
+                <img  id="TweetMe" class="imgTwitter" src="Logo_of_Twitter.svg.webp" alt="">
+                <div class="quotes">
+                    <h1 id="heading">Random Quotes</h1>
+                    <p id="quotesText">गलतियां हमेशा क्षमा की जा सकती हैं , यदि आपके पास उन्हें स्वीकारने का साहस हो।</p>
+                </div>
+                <h4 id="author">By: architecto quae</h4>
+            </div>
+        </div>
+        <div class="btn">
+            <button id="Quotesbtn">New quotes</button>
+            <button id="HQuotesbtn">Quotes in Hindi</button>
+        </div>
+    </div>
+
+    <script>
+        const authorval = document.getElementById("author");
+        const quotesText = document.getElementById("quotesText");
+        const Quotesbtn = document.getElementById("Quotesbtn");
+        const TweetMe = document.getElementById("TweetMe");
+        const Qheading = document.getElementById("heading");
+       const HQuotesbtn = document.querySelector("#HQuotesbtn");
+
+        let realdata = "";
+        let quotesData = "";
+
+        let TweetNow = () =>{
+            let tweetPost = `https://twitter.com/intent/tweet?text=${quotesData.content} \n Author: ${quotesData.author}`;
+            window.open(tweetPost);
+        }
+        let getNewQuotes = ()=>{
+            let rnum = Math.floor(Math.random()*20);
+            quotesData = realdata.results[rnum];
+            Qheading.innerText = "Random Quotes"
+            quotesText.innerText = `${quotesData.content}`
+            quotesData.author === null ? authorval.innerText = "unKnown" : authorval.innerText = `By: ${quotesData.author}`;
+        }
+        const getQuotes = async()=>{
+            let quotesPage = Math.floor(Math.random()*20);
+            let api = `https://api.quotable.io/quotes?page=${quotesPage}`;
+            try{
+                let data  = await fetch(api); 
+                realdata = await data.json()
+                getNewQuotes();
+            }catch(err){
+                console.log(err);
+            }
+        }
+       
+      let hindiQuotes = [
+        {
+            content: "हमेशा अपने वास्तिक रूप में रहो , खुद को व्यक्त करो , स्वयं में भरोसा रखो , बाहर जाकर किसी और सफल व्यक्तित्व को मत तलाशो  और उसकी नक़ल मत करो।",
+            author :" ब्रूस ली"
+        },
+        {
+            content: "गलतियां हमेशा क्षमा की जा सकती हैं , यदि आपके पास उन्हें स्वीकारने का साहस हो।",
+            author :" ब्रूस ली"
+        },
+        {
+            content: " मैं उस आदमी से नहीं डरता जिसने 10,000 किक्स की प्रैक्टिस एक बार की हो , बल्कि मैं उस आदमी से डरता हूँ जिसने एक किक की प्रैक्टिस 10,000 बार की हो।",
+            author :" ब्रूस ली"
+        },
+        {
+            content: "ध्यान दीजिये कि सबसे कठोर पेड़ सबसे आसानी से टूट जाते  हैं , जबकि , बांस या विलो हवा के साथ मुड़कर बच जाते है।",
+            author :" ब्रूस ली"
+        },
+        {
+            content: " ज्ञान आपको शक्ति देगा ,लेकिन चरित्र सम्मान देगा।",
+            author :" ब्रूस ली"
+        },
+        {
+            content: "मैं इस दुनिया में आपकी उम्मीदों पर खरा उतरने के लिए नहीं हूँ और आप इस दुनिया में मेरी उम्मीदों पर खरा उतरने के लिए नहीं हैं।",
+            author :" ब्रूस ली"
+        },
+        {
+            content: "अगर आप हर चीज में अपने लिए एक सीमा निर्धारित कर देंगे , शारीरिक या कुछ और ; वो आपके काम , आपके जीवन मे फ़ैल जायेगा।  कोई सीमाएं नहीं हैं। सिर्फ पठार हैं , और आपको वहाँ रुकना नहीं है , आपको उनसे आगे जाना है।",
+            author :" ब्रूस ली"
+        },
+        {
+            content: "अगर आप हर चीज में अपने लिए एक सीमा निर्धारित कर देंगे , शारीरिक या कुछ और ; वो आपके काम , आपके जीवन मे फ़ैल जायेगा।  कोई सीमाएं नहीं हैं। सिर्फ पठार हैं , और आपको वहाँ रुकना नहीं है , आपको उनसे आगे जाना है।",
+            author :" ब्रूस ली"
+        },
+        {
+            content: "जितना एक मूर्ख वयक्ति किसी बुद्धिमानी भरे उत्तर से नहीं सीख सकता उससे अधिक  एक बुद्धिमान एक मूर्खतापूर्ण प्रश्न से सीख सकता है।",
+            author :" ब्रूस ली"
+        },
+        {
+            content: "अगर आप अपनी ज़िन्दगी से प्यार करते हैं तो वक़्त मत बर्वाद करें , क्योंकि वो वक़्त ही है जिससे ज़िन्दगी बनी होती है।",
+            author :" ब्रूस ली"
+        },
+        {
+            content: "यदि आप किसी चीज के बारे में सोचने में बहुत अधिक समय लगाते हैं , तो आप उसे कभी कर नहीं पाएंगे।",
+            author :" ब्रूस ली"
+        },
+         {
+            content: "अमरता की कुंजी पहले एक याद रखने लायक जीवन जीने में हैं।",
+            author :" ब्रूस ली"
+        }, 
+        {
+            content: "चीजों को ऐसे लें जैसी वे हैं।  जब घूँसा मारना हो तब घूंसा मारें।  जब लात मारनी हो लात मारें।",
+            author :" ब्रूस ली"
+        }, 
+        {
+            content: "जल्दी गुस्सा करना जल्द ही आपको मूर्ख साबित कर देगा।",
+            author :" ब्रूस ली"
+        }, 
+        {
+            content: "जैसा आप सोचते हैं , वैसा आप बन जायेंगे।",
+            author :" ब्रूस ली"
+        }, 
+        {
+            content: "दिखावा करना किसी मूर्ख का अपना महत्त्व दिखाने का तरीका है।",
+            author :" ब्रूस ली"
+        }, 
+        {
+            content: "हालात भाड़ में जाए, मैं अवसरों का निर्माण करता हूँ।",
+            author :" ब्रूस ली"
+        }, 
+        {
+            content: "सचमुच जीना दूसरों के लिए जीना है।",
+            author :" ब्रूस ली"
+        }, 
+        {
+            content: "एक आसान जीवन के लिए प्रार्थना मत करो , ऐसी शक्ति के लिए प्राथना करो जिससे एक कठिन जीवन जी सको।",
+            author :" ब्रूस ली"
+        }, 
+        {
+            content: "खुश रहो लेकिन कभी संतुष्ट मत रहो ।",
+            author :" ब्रूस ली"
+        },
+        {
+            content: "शिखर तक पहुँचने के लिए ताकत चाहिए होती है, चाहे वो माउन्ट एवरेस्ट का शिखर हो या आपके पेशे का।",
+            author :"अब्दुल कलाम"
+        },
+        {
+            content: "क्या हम यह नहीं जानते कि आत्म सम्मान आत्म निर्भरता के साथ आता है?",
+            author :"अब्दुल कलाम"
+        },
+        {
+            content: "कृत्रिम सुख की बजाये ठोस उपलब्धियों के पीछे समर्पित रहिये।",
+            author :"अब्दुल कलाम"
+        },
+        {
+            content: "अंग्रेजी आवश्यक है क्योंकि वर्तमान में विज्ञान के मूल काम अंग्रेजी में हैं। मेरा विश्वास है कि अगले दो दशक में विज्ञान के मूल काम हमारी भाषाओँ में आने शुरू हो जायेंगे, तब हम जापानियों की तरह आगे बढ़ सकेंगे।",
+            author :"अब्दुल कलाम"
+        },
+        {
+            content: "भगवान, हमारे निर्माता ने हमारे मष्तिष्क और व्यक्तित्व में असीमित शक्तियां और क्षमताएं दी हैं। इश्वर की प्रार्थना हमें इन शक्तियों को विकसित करने में मदद करती है।",
+            author :"अब्दुल कलाम"
+        },
+        {
+            content: "मैं इस बात को स्वीकार करने के लिए तैयार था कि मैं कुछ चीजें नहीं बदल सकता।",
+            author :"अब्दुल कलाम"
+        },
+        {
+            content: "महान सपने देखने वालों के महान सपने हमेशा पूरे होते हैं।",
+            author :"अब्दुल कलाम"
+        },
+        {
+            content: "अगर किसी देश को भ्रष्टाचार – मुक्त और सुन्दर-मन वाले लोगों का देश बनाना है तो, मेरा दृढ़तापूर्वक  मानना  है कि समाज के तीन प्रमुख सदस्य ये कर सकते हैं। पिता, माता और गुरु।",
+            author :"अब्दुल कलाम"
+        },
+        {
+            content: "यदि हम स्वतंत्र नहीं हैं तो कोई भी हमारा आदर नहीं करेगा।",
+            author :"अब्दुल कलाम"
+        },
+        {
+            content: "आइये हम अपने आज का बलिदान कर दें ताकि हमारे बच्चों का कल बेहतर हो सके।",
+            author :"अब्दुल कलाम"
+        },
+        {
+            content: "आकाश की तरफ देखिये। हम अकेले नहीं हैं। सारा ब्रह्माण्ड हमारे लिए अनुकूल है और जो सपने देखते हैं और मेहनत करते हैं उन्हें प्रतिफल देने की साजिश करता है।",
+            author :"अब्दुल कलाम"
+        },
+        {
+            content: "इंसान को कठिनाइयों की आवश्यकता होती है, क्योंकि सफलता का आनंद उठाने कि लिए ये ज़रूरी हैं।",
+            author :"अब्दुल कलाम"
+        },
+        {
+            content: "मुझे बताइए, यहाँ का मीडिया इतना नकारात्मक क्यों है? भारत में हम अपनी अच्छाइयों, अपनी उपलब्धियों को दर्शाने में इतना शर्मिंदा क्यों होते हैं? हम एक माहान राष्ट्र हैं। हमारे पास ढेरों सफलता की गाथाएँ हैं, लेकिन हम उन्हें नहीं स्वीकारते। क्यों?",
+            author :"अब्दुल कलाम"
+        },
+        {
+            content: "इससे पहले कि सपने सच हों आपको सपने देखने होंगे।",
+            author :"अब्दुल कलाम"
+        },
+       
+        ]
+
+        let lenHiquote = hindiQuotes.length;
+        let gethiQ = ()=>{
+            let rnum = Math.floor(Math.random()*lenHiquote) 
+            let Hiquotecon = hindiQuotes[rnum];
+            quotesText.innerText = `${Hiquotecon.content}`
+            authorval.innerText = `${Hiquotecon.author}`
+            Qheading.innerText = "अनमोल विचार"
+        }
+        TweetMe.addEventListener("click",TweetNow)
+        Quotesbtn.addEventListener("click",getQuotes)
+        HQuotesbtn.addEventListener("click",gethiQ)
+        getQuotes(); 
+    </script>
+</body>
+</html>
+<!-- const api = "https://api.quotable.io"; -->
